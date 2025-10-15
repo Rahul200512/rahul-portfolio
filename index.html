@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rahul Reddy Avula — Portfolio</title>
+  <meta name="description" content="Portfolio of Rahul Reddy Avula — Data Engineer & Software Engineer." />
+  <meta name="theme-color" content="#0ea5e9" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'] } } }
+    };
+  </script>
+
+  <style>
+    /* background dots */
+    .page-dots { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: transparent; overflow: hidden; }
+    .page-dots::before { content:""; position:absolute; inset:0; background-image: radial-gradient(white 1.2px, transparent 1.2px); background-size:150px 150px; animation:twinkle 10s linear infinite; opacity:.8; }
+    .page-dots::after { content:""; position:absolute; inset:0; background-image: radial-gradient(white 0.8px, transparent 0.8px), radial-gradient(white 1px, transparent 1px), radial-gradient(white 1.6px, transparent 1.6px); background-size:300px 300px,250px 250px,400px 400px; background-position:50px 100px,120px 30px,300px 200px; animation:starshift 60s linear infinite; opacity:.9; }
+    @keyframes twinkle {0%,100%{opacity:.8}50%{opacity:1}} @keyframes starshift {from{transform:translate(0,0)}to{transform:translate(-40px,40px)}}
+
+    /* kept original styles */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+    .nav-link { position: relative; }
+    .nav-link.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -8px; height: 2px; background: linear-gradient(90deg,#06b6d4,#3b82f6); border-radius: 9999px; }
+    header{transition:transform .35s ease, opacity .25s ease}
+    .space-gradient{background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(56,189,248,.15), rgba(15,23,42,.05) 60%, transparent 80%),
+      radial-gradient(800px 400px at 90% 10%, rgba(147,197,253,.08), transparent 60%),
+      linear-gradient(180deg,#0b1324 0%,#020617 100%)}
+    #starfield{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
+    .hero-content{position:relative;z-index:1}
+    .card-3d{perspective:1000px}
+    .tilt{transform-style:preserve-3d;will-change:transform;transition:transform .2s ease}
+    .shine{position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 300px at var(--mx,50%) var(--my,50%),rgba(16,185,129,.18),transparent 60%);opacity:0;transition:opacity .3s ease}
+    .card:hover .shine{opacity:1}
+    .chip{background:linear-gradient(90deg,rgba(148,163,184,.15),rgba(16,185,129,.25),rgba(148,163,184,.15));background-size:200% 100%;animation:chip 8s linear infinite}
+    @keyframes chip{0%{background-position:0 0}100%{background-position:200% 0}}
+    .meter{height:8px;border-radius:9999px;background:rgba(15,23,42,.6);border:1px solid rgba(51,65,85,.6);overflow:hidden}
+    .meter-progress{height:100%;width:0%;border-radius:9999px;background:linear-gradient(90deg,#34d399,#22d3ee);box-shadow:0 0 16px rgba(34,211,238,.25);transition:width 1.2s ease}
+    .section-featured{background:linear-gradient(180deg,#091a3a 0%,#0a1324 100%);}
+    .section-skills{background:linear-gradient(180deg,#233241 0%,#1f2b38 100%);}
+    .hero-grid { display: flex; gap: 40px; align-items: center; justify-content: center; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+    .hero-left { flex: 1; min-width: 320px; max-width: 640px; text-align: left; }
+    .hero-right { flex: 1; min-width: 320px; max-width: 540px; }
+    .hero-left h1 { margin: 0; line-height: 0.95; font-weight: 800; font-size: 72px; letter-spacing: -1px; }
+    .hero-left p.lead { color: #94a3b8; margin-top: 20px; font-size: 18px; max-width: 620px; }
+    .btn-pill { padding: 12px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; display: inline-block; }
+    .btn-resume { background: linear-gradient(90deg,#ff6aa3,#b07bff); color: #071428; border: none; }
+    .code-card pre { color: #cfe9ff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; font-size:14px; margin:0; overflow:auto; max-height:320px; white-space: pre-wrap; }
+
+    /* skills carousel styles */
+    .skills-carousel{padding:3.5rem 0}
+    .skills-viewport{overflow:hidden;border-radius:14px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0));box-shadow:0 12px 40px rgba(2,6,23,0.45);border:1px solid rgba(255,255,255,0.03)}
+    .skills-track{display:flex;gap:1.125rem;align-items:center;will-change:transform;animation:skills-scroll linear infinite;animation-duration:var(--skills-duration,16s)}
+    .skills-card{min-width:10rem;max-width:10rem;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.75rem;background:rgba(255,255,255,0.02);border-radius:12px;box-shadow:0 8px 22px rgba(2,6,23,0.5);text-align:center}
+    .skills-card img{width:56px;height:56px;object-fit:contain;border-radius:8px}
+    .skills-card .label{margin-top:0.5rem;font-size:0.875rem;color:#dbeafe}
+    @keyframes skills-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .skills-viewport:hover .skills-track,.skills-viewport:focus-within .skills-track{animation-play-state:paused}
+    @media (max-width:720px){.skills-card{min-width:9rem;max-width:9rem}.skills-card img{width:48px;height:48px}}
+
+    /* technical skills grid (progress cards) */
+    .tech-skills { padding:4rem 0; }
+    .skill-card { background: rgba(255,255,255,0.02); border-radius: 16px; padding: 1.5rem; box-shadow: 0 12px 30px rgba(2,6,23,0.45); border:1px solid rgba(255,255,255,0.03); }
+    .skill-row { display:flex;align-items:center;justify-content:space-between;margin-top:1rem;gap:1rem; }
+    .skill-name { color:#cfe9ff;font-weight:600; }
+    .skill-percent { color:#cbd5e1; margin-left:12px; white-space:nowrap; }
+  </style>
+</head>
+<body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+  <!-- Top bar -->
+  <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4 will-change-transform transition-transform duration-300">
+    <div class="backdrop-blur bg-slate-900/60 border border-slate-800 rounded-2xl shadow-soft">
+      <div class="h-14 flex items-center justify-between px-4">
+        <a href="index.html" class="font-bold tracking-tight text-slate-100">
+          <span class="px-2 py-1 rounded-lg bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 border border-emerald-500/30 text-emerald-200">Rahul Reddy Avula</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-[15px] text-slate-200 font-medium">
+          <a class="hover:text-emerald-300 nav-link" href="#home">Home</a>
+          <a class="hover:text-emerald-300 nav-link" href="#skills-carousel">Skills</a>
+          <a class="hover:text-emerald-300 nav-link" href="#all-projects">Projects</a>
+          <a class="hover:text-emerald-300 nav-link" href="#experience">Experience</a>
+          <a class="hover:text-emerald-300 nav-link" href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="relative overflow-hidden space-gradient min-h-[92vh] sm:min-h-screen grid place-items-center">
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="page-dots" aria-hidden="true"></div>
+
+    <div class="hero-content text-center px-4">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <p style="color:#9fbcd3;font-size:20px;margin:0 0 8px 0;">Hello,</p>
+
+          <h1>
+            <span style="display:block;color:#ffffff"></span>
+            <span style="display:block;color:#ff4d86">RAHUL</span>
+            <span style="display:block;color:#ff4d86">REDDY</span>
+            <span style="display:block;color:transparent;background:linear-gradient(90deg,#2ee6c4,#9ef3ff);-webkit-background-clip:text;background-clip:text">I'm a</span>
+            <span style="display:block;font-size:56px;color:transparent;background:linear-gradient(90deg,#2ee6c4,#9ef3ff);-webkit-background-clip:text;background-clip:text">Data &amp; Software Engineer.</span>
+          </h1>
+
+          <p class="lead">I build production-grade data pipelines, backend services, and full-stack applications that scale reliably.</p>
+
+          <div style="margin-top:18px;font-size:16px;">
+            <a href="https://github.com/Rahul200512" target="_blank" style="color:#6ea7ff;margin-right:18px;text-decoration:underline;">GitHub</a>
+            <a href="https://www.linkedin.com/in/rahul-reddy-avula-37572b328/" target="_blank" style="color:#6ea7ff;text-decoration:underline;">LinkedIn</a>
+          </div>
+
+          <div style="margin-top:28px;display:flex;gap:16px;flex-wrap:wrap;">
+            <a href="contact.html" class="btn-pill" style="background:rgba(6,182,212,0.08);border:1px solid rgba(255,255,255,0.06);color:#9ef3e6;">Contact Me</a>
+            
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="rounded-2xl p-6 code-card" style="background:linear-gradient(180deg, rgba(4,12,25,0.55), rgba(4,10,20,0.35));border:1px solid rgba(255,255,255,0.03);box-shadow:0 20px 60px rgba(2,6,23,0.6);">
+            <div style="display:flex;gap:10px;margin-bottom:10px;">
+              <span style="width:12px;height:12px;border-radius:50%;background:#ff7b7b;display:inline-block"></span>
+              <span style="width:12px;height:12px;border-radius:50%;background:#ffbf6a;display:inline-block"></span>
+              <span style="width:12px;height:12px;border-radius:50%;background:#7ee3b7;display:inline-block"></span>
+            </div>
+
+            <pre>
+const rahul = {
+  name: 'Rahul Reddy Avula',
+  title: 'Data & Software Engineer',
+  email: 'ravula1@asu.edu',
+  phone: '480-849-2979',
+  bachelors: 'Arizona State University',
+  year: 'Fourth year',
+  "Relevant Coursework": [
+    'Data Structures & Algorithms',
+    'Distributed Systems',
+    'Operating Systems',
+    'Software Engineering',
+    'Cloud Computing'
+  ],
+  hireable: true
+};
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Carousel (immediately after home) -->
+  <section id="skills-carousel" class="skills-carousel section-skills">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center reveal">
+        <h2 class="text-3xl font-extrabold text-slate-100">Skills Carousel</h2>
+        <p class="mt-2 text-slate-400">A quick glance at tools I use daily.</p>
+      </div>
+
+      <div class="mt-8">
+        <div class="skills-viewport" tabindex="0" aria-label="Skills carousel">
+          <div class="skills-track" id="skillsTrack">
+            <div class="skills-card">
+              <img src="images/python.png" alt="Python" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg'">
+              <div class="label">Python</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/java.png" alt="Java" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg'">
+              <div class="label">Java</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/javascript.png" alt="JavaScript" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'">
+              <div class="label">JavaScript</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/sql.png" alt="SQL" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg'">
+              <div class="label">SQL</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/docker.png" alt="Docker" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg'">
+              <div class="label">Docker</div>
+            </div>
+
+            <!-- advanced tools -->
+            <div class="skills-card">
+              <img src="images/airflow.png" alt="Airflow" loading="lazy" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/apache/airflow/main/docs/_static/airflow-icon.png'">
+              <div class="label">Airflow</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/aws.png" alt="AWS" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg'">
+              <div class="label">AWS</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/kafka.png" alt="Kafka" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kafka/kafka-original.svg'">
+              <div class="label">Kafka</div>
+            </div>
+
+            <div class="skills-card">
+              <img src="images/spark.png" alt="Spark" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache_spark/apache_spark-original.svg'">
+              <div class="label">Spark</div>
+            </div>
+
+            <!-- duplicates for seamless loop -->
+            <div class="skills-card">
+              <img src="images/python.png" alt="Python" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg'">
+              <div class="label">Python</div>
+            </div>
+            <div class="skills-card">
+              <img src="images/java.png" alt="Java" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg'">
+              <div class="label">Java</div>
+            </div>
+            <div class="skills-card">
+              <img src="images/javascript.png" alt="JavaScript" loading="lazy" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg'">
+              <div class="label">JavaScript</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects (simplified: title + source link only, images used as visual) -->
+  <section id="all-projects" class="py-24 section-featured">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center reveal">
+        <h2 class="text-3xl font-extrabold text-slate-100">Featured Projects</h2>
+        <p class="mt-2 text-slate-400">Click "Source Code" to view each repository.</p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-8 mx-auto max-w-4xl cards centered">
+        <!-- Earthquake -->
+        <article class="card group relative rounded-2xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 overflow-hidden card-3d reveal">
+          <div class="shine"></div>
+          <div class="tilt p-0">
+            <div class="aspect-video relative overflow-hidden bg-slate-800">
+              <img src="images/Earthquake.png" alt="Earthquake project" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
+                   onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558980664-10e7174d2b9d?q=80&w=1600&auto=format&fit=crop&crop=entropy'">
+            </div>
+            <div class="p-6">
+              <h3 class="font-semibold text-slate-100">Earthquake</h3>
+              <div class="mt-5 flex items-center gap-3 text-sm">
+                <a class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-slate-100 border border-slate-700"
+                   href="https://github.com/Rahul200512/Earthquake" target="_blank" rel="noreferrer">Source Code</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Cricbuzz -->
+        <article class="card group relative rounded-2xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 overflow-hidden card-3d reveal">
+          <div class="shine"></div>
+          <div class="tilt p-0">
+            <div class="aspect-video relative overflow-hidden bg-slate-800">
+              <img src="images/Cricbuzz%20pipeline.png" alt="Cricbuzz pipeline" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
+                   onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=1600&auto=format&fit=crop&crop=entropy'">
+            </div>
+            <div class="p-6">
+              <h3 class="font-semibold text-slate-100">Cricbuzz GCP Pipeline</h3>
+              <div class="mt-5 flex items-center gap-3 text-sm">
+                <a class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-slate-100 border border-slate-700"
+                   href="https://github.com/Rahul200512/cricbuzz-gcp-pipeline.git" target="_blank" rel="noreferrer">Source Code</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 mx-auto max-w-4xl">
+        <!-- AWS pipeline -->
+        <article class="card group relative rounded-2xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 overflow-hidden card-3d reveal">
+          <div class="shine"></div>
+          <div class="tilt p-0">
+            <div class="aspect-video relative overflow-hidden bg-slate-800">
+              <img src="images/AWS%20pipeline.png" alt="AWS pipeline" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
+                   onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1507668077129-56e32842fceb?q=80&w=1600&auto=format&fit=crop&crop=entropy'">
+            </div>
+            <div class="p-6">
+              <h3 class="font-semibold text-slate-100">Aws-pipeline</h3>
+              <div class="mt-5 flex items-center gap-3 text-sm">
+                <a class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-slate-100 border border-slate-700"
+                   href="https://github.com/Rahul200512/Aws-pipeline" target="_blank" rel="noreferrer">Source Code</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- SEO hackathon -->
+        <article class="card group relative rounded-2xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/80 overflow-hidden card-3d reveal">
+          <div class="shine"></div>
+          <div class="tilt p-0">
+            <div class="aspect-video relative overflow-hidden bg-slate-800">
+              <img src="images/SEO%20hackathon.png" alt="SEO hackathon" class="absolute inset-0 w-full h-full object-cover" loading="lazy"
+                   onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop&crop=entropy'">
+            </div>
+            <div class="p-6">
+              <h3 class="font-semibold text-slate-100">SEO hackathon</h3>
+              <div class="mt-5 flex items-center gap-3 text-sm">
+                <a class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 px-3 py-2 text-slate-100 border border-slate-700"
+                   href="https://github.com/jparuchu-818/SEO-hackathon.git" target="_blank" rel="noreferrer">Source Code</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-10 text-center reveal">
+        <a href="projects.html" class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-slate-100 border border-slate-700">View All Projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience (restored) -->
+  <section id="experience" class="py-16 bg-slate-950 text-slate-100">
+    <div class="max-w-6xl mx-auto px-4 reveal">
+      <h2 class="text-3xl font-extrabold mb-6">Experience</h2>
+
+      <!-- Exsegen Genomics -->
+      <div class="border border-slate-800 rounded-2xl p-6 mb-6 bg-slate-900/50">
+        <div class="flex items-start gap-4">
+          <img src="images/exsegen.png" alt="Exsegen" style="height:56px;object-fit:contain" loading="lazy"
+               onerror="this.onerror=null;this.src='https://via.placeholder.com/160x56?text=Exsegen'">
+          <div>
+            <div class="text-xl font-semibold">Exsegen Genomics — Data Engineer (Intern)</div>
+            <div class="text-sm text-slate-400 mt-1">May 2025 – Aug 2025 · Hyderabad, Telangana, India (On-site)</div>
+            <ul class="mt-3 text-slate-300 list-disc list-inside space-y-2">
+              <li>Developed a high-throughput NGS data pipeline using Python, Apache Spark, and Airflow, transforming raw sequencing reads into structured variant-level data for liquid biopsy analysis.</li>
+              <li>Created automated data validation checks (coverage thresholds, duplication rates), improving processing efficiency and reducing downstream analysis errors.</li>
+              <li>Integrated internal pathology tools with the GalenPath analytics platform, enhancing data handoffs in diagnostic workflows.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optimus Pharma -->
+      <div class="border border-slate-800 rounded-2xl p-6 mb-6 bg-slate-900/50">
+        <div class="flex items-start gap-4">
+          <img src="images/optimus.png" alt="Optimus" style="height:56px;object-fit:contain" loading="lazy"
+               onerror="this.onerror=null;this.src='https://via.placeholder.com/160x56?text=Optimus'">
+          <div>
+            <div class="text-xl font-semibold">Optimus Pharma — Engineer Intern</div>
+            <div class="text-sm text-slate-400 mt-1">May 2024 – Aug 2024 · Hyderabad, Telangana, India (On-site)</div>
+            <ul class="mt-3 text-slate-300 list-disc list-inside space-y-2">
+              <li>Shipped an internal FastAPI service with 8 REST endpoints (type hints, OpenAPI) and containerized with Docker and a Makefile for single-command runs.</li>
+              <li>Designed PostgreSQL schema + indexes for 300k+ rows; implemented pagination and parameterized queries; reduced p95 latency by ~30% via tuning and connection pooling.</li>
+              <li>Set up CI/CD with a GitHub Actions workflow (lint, test, build) and wrote 20+ unit/integration tests; added structured logging, health checks and basic metrics.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Skills cards (progress bars) -->
+  <section id="technical-skills" class="tech-skills section-skills">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center reveal">
+        <h2 class="text-3xl font-extrabold text-slate-100">Technical Skills</h2>
+        <p class="mt-2 text-slate-400">Proficient in modern web technologies and cloud platforms</p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="skill-card reveal">
+          <h3 class="text-xl font-bold text-slate-100">Programming Languages</h3>
+          <div class="skill-row">
+            <div class="skill-name">Java</div>
+            <div class="skill-percent">90%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="90"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">Python</div>
+            <div class="skill-percent">85%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="85"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">C / C++</div>
+            <div class="skill-percent">80%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="80"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">JavaScript / TypeScript</div>
+            <div class="skill-percent">86%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="86"></div></div>
+        </div>
+
+        <div class="skill-card reveal">
+          <h3 class="text-xl font-bold text-slate-100">Frontend Development</h3>
+          <div class="skill-row">
+            <div class="skill-name">React</div>
+            <div class="skill-percent">88%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="88"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">Next.js</div>
+            <div class="skill-percent">80%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="80"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">Tailwind CSS</div>
+            <div class="skill-percent">90%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="90"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">TypeScript</div>
+            <div class="skill-percent">85%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="85"></div></div>
+        </div>
+
+        <div class="skill-card reveal">
+          <h3 class="text-xl font-bold text-slate-100">Backend & Databases</h3>
+          <div class="skill-row">
+            <div class="skill-name">Spring Boot</div>
+            <div class="skill-percent">88%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="88"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">Java Spark</div>
+            <div class="skill-percent">80%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="80"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">PostgreSQL</div>
+            <div class="skill-percent">85%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="85"></div></div>
+
+          <div class="skill-row" style="margin-top:1rem;">
+            <div class="skill-name">MariaDB / MySQL</div>
+            <div class="skill-percent">82%</div>
+          </div>
+          <div class="meter mt-2"><div class="meter-progress" data-percent="82"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Employers logos (small) -->
+  <section id="employers" class="py-12">
+    <div class="max-w-6xl mx-auto px-4 text-center reveal">
+      <h3 class="text-xl font-semibold text-slate-100 mb-6">Previous Employers</h3>
+      <div class="flex items-center justify-center gap-10 flex-wrap">
+        <img src="images/optimus.png" alt="Optimus" style="height:56px;object-fit:contain" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
+        <img src="images/exsegen.png" alt="Exsegen" style="height:56px;object-fit:contain" loading="lazy" onerror="this.onerror=null;this.style.display='none'">
+      </div>
+    </div>
+  </section>
+
+  <!-- Education only (simple) -->
+  <section id="education" class="py-12 bg-slate-950 text-center">
+    <h3 class="text-2xl font-bold text-slate-100">Bachelors — Arizona State University</h3>
+    <p class="text-slate-400 mt-2">Fourth year</p>
+    <p class="text-slate-400 mt-1 text-sm">Relevant Coursework: Data Structures & Algorithms, Distributed Systems, Operating Systems, Software Engineering, Cloud Computing.</p>
+  </section>
+
+  <script>
+    document.documentElement.classList.add('dark');
+
+    // reveal on scroll (IntersectionObserver)
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll('.reveal');
+      if (prefersReduced) { els.forEach(e=>e.classList.add('in-view')); return; }
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+          }
+        });
+      }, {threshold:0.12});
+      els.forEach(el=>io.observe(el));
+    })();
+  </script>
+
+  <!-- carousel sizing & medium speed -->
+  <script>
+    (function(){
+      const track = document.getElementById('skillsTrack');
+      if (!track) return;
+      function adjust(){
+        const children = Array.from(track.children);
+        const gap = parseFloat(getComputedStyle(track).gap || 18);
+        const half = Math.ceil(children.length/2);
+        const singleWidth = children.slice(0,half).reduce((s,el)=> s + el.getBoundingClientRect().width + gap, 0);
+        track.style.width = (singleWidth*2) + 'px';
+        // medium speed: clamp between 14s and 20s
+        const computed = Math.round(singleWidth / 12);
+        const duration = Math.min(20, Math.max(14, computed));
+        document.documentElement.style.setProperty('--skills-duration', duration + 's');
+      }
+      const ro = new ResizeObserver(adjust);
+      ro.observe(track);
+      window.addEventListener('load', adjust);
+      window.addEventListener('resize', adjust);
+    })();
+  </script>
+
+  <!-- render progress bars from data-percent -->
+  <script>
+    (function(){
+      function animateMeters(){
+        const meters = document.querySelectorAll('.meter-progress');
+        meters.forEach(m=>{
+          const pct = parseInt(m.getAttribute('data-percent') || '0', 10);
+          // small timeout so transition applies after layout
+          setTimeout(()=> m.style.width = pct + '%', 80);
+        });
+      }
+      if (document.readyState === 'complete') animateMeters();
+      else window.addEventListener('load', animateMeters);
+    })();
+  </script>
+
+  <footer class="bg-slate-950 text-slate-300 border-t border-slate-800 mt-24">
+    <div class="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
+      <div>
+        <h2 class="text-emerald-400 font-bold text-lg">Rahul Reddy Avula</h2>
+        <p class="mt-2 text-slate-400">Data Engineer & Software Engineer — building data pipelines, scalable systems, and full-stack services.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-100 mb-3">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="index.html" class="hover:text-emerald-400">Home</a></li>
+          <li><a href="about.html" class="hover:text-emerald-400">About</a></li>
+          <li><a href="#experience" class="hover:text-emerald-400">Experience</a></li>
+          <li><a href="#all-projects" class="hover:text-emerald-400">Projects</a></li>
+          <li><a href="contact.html" class="hover:text-emerald-400">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-100 mb-3">Connect</h3>
+        <ul class="space-y-2">
+          <li><a href="mailto:ravula1@asu.edu" class="hover:text-emerald-400">ravula1@asu.edu</a></li>
+          <li><a href="https://www.linkedin.com/in/rahul-reddy-avula-37572b328/" target="_blank" class="hover:text-emerald-400">LinkedIn</a></li>
+          <li><a href="https://github.com/Rahul200512" target="_blank" class="hover:text-emerald-400">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-800 text-center py-6 text-sm text-slate-500">
+      © 2025 Rahul Reddy Avula. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>

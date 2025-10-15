@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About — Rahul Reddy Avula</title>
+  <meta name="theme-color" content="#0ea5e9" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class'};</script>
+  <style>
+    header{transition:transform .35s ease, opacity .25s ease}
+    .header-hidden{transform:translate(-50%,-160%);opacity:0;pointer-events:none}
+    .nav-link{position:relative}
+    .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-8px;height:2px;background:linear-gradient(90deg,#06b6d4,#3b82f6);border-radius:9999px}
+    .space-gradient{background:linear-gradient(180deg,#0b1324 0%,#020617 100%)}
+  </style>
+</head>
+<body class="bg-white text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+  <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4 will-change-transform">
+    <div class="backdrop-blur bg-slate-900/60 border border-slate-800 rounded-2xl">
+      <div class="h-14 flex items-center justify-between px-4">
+        <a href="index.html" class="font-bold tracking-tight text-slate-100">
+          <span class="px-2 py-1 rounded-lg bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 border border-emerald-500/30 text-emerald-200">Rahul Reddy Avula</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-[15px] text-slate-200 font-medium">
+          <a class="hover:text-emerald-300 nav-link" href="index.html">Home</a>
+          <a class="hover:text-emerald-300 nav-link" href="about.html">About</a>
+          <a class="hover:text-emerald-300 nav-link" href="experience.html">Experience</a>
+          <a class="hover:text-emerald-300 nav-link" href="projects.html">Projects</a>
+          <a class="hover:text-emerald-300 nav-link" href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="space-gradient min-h-screen pt-28">
+    <section class="max-w-6xl mx-auto px-6 pb-24">
+      <h1 class="text-center text-4xl md:text-6xl font-extrabold text-slate-100">
+        About <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-teal-300 to-sky-400">Me</span>
+      </h1>
+      <p class="mt-4 text-center text-slate-400 max-w-3xl mx-auto">
+        I'm Rahul Reddy Avula — doing my bachelor's at ASU. I build data pipelines, scalable systems, and full-stack services. My projects cover real-time data visualization, cloud ETL pipelines, and SEO analytics.
+      </p>
+
+      <div class="mt-12 grid md:grid-cols-2 gap-8">
+        <div class="space-y-6 text-slate-300">
+          <p>Hi! I'm <span class="font-semibold text-slate-100">Rahul Reddy Avula</span>, pursuing my B.S. in Computer Science at Arizona State University. I enjoy turning data and systems challenges into reliable, testable software.</p>
+          <p>My recent work includes building production ETL pipelines on AWS/GCP, developing internal FastAPI services, and optimizing SQL schemas for high-throughput workloads.</p>
+          <p>Projects you can explore: Earthquake (real-time ingest & viz), Cricbuzz GCP pipeline, AWS pipeline, and an SEO hackathon project.</p>
+        </div>
+
+        <div class="space-y-6">
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <div class="flex items-start gap-4">
+              <div class="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 grid place-items-center text-emerald-300 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7l9-4 9 4-9 4-9-4zm0 6v-5l9 4 9-4v5M7 13v5a5 5 0 0010 0v-5"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <h3 class="text-lg md:text-xl font-semibold text-slate-100">Bachelor of Science in Computer Science</h3>
+                <div class="mt-1 text-emerald-300">Arizona State University</div>
+                <div class="mt-2 text-sm text-slate-400">Aug 2022 – May 2026 • Tempe, AZ</div>
+                <div class="mt-2 text-sm text-slate-300"><span class="font-medium">GPA:</span> 3.63 / 4.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <h4 class="font-semibold text-slate-100">Skills Snapshot</h4>
+            <ul class="mt-3 space-y-2 text-slate-300">
+              <li>Languages: Python, Java, C++, JavaScript, SQL</li>
+              <li>Cloud & Data: AWS (Glue, S3), GCP (BigQuery, Cloud Functions)</li>
+              <li>Tools: Docker, Kafka, Spark, Airflow, PostgreSQL, Cassandra, FastAPI</li>
+              <li>Practices: Performance optimization, automated testing, CI/CD, instrumentation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    document.documentElement.classList.add('dark');
+    (function(){ const href = 'about.html'; document.querySelectorAll('nav a.nav-link').forEach(a => { if (a.getAttribute('href') === href) a.classList.add('active'); }); })();
+    (function(){
+      const header = document.querySelector('header');
+      let lastY = window.pageYOffset || document.documentElement.scrollTop;
+      const THRESH = 8;
+      window.addEventListener('scroll', () => {
+        const y = window.pageYOffset || document.documentElement.scrollTop;
+        const delta = y - lastY;
+        if (Math.abs(delta) <= THRESH) return;
+        if (delta > 0 && y > 120) header.classList.add('header-hidden');
+        else header.classList.remove('header-hidden');
+        lastY = y;
+      }, { passive: true });
+    })();
+  </script>
+
+  <footer class="bg-slate-950 text-slate-300 border-t border-slate-800 mt-24">
+    <div class="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-10">
+      <div>
+        <h2 class="text-emerald-400 font-bold text-lg">Rahul Reddy Avula</h2>
+        <p class="mt-2 text-slate-400">Data engineer & software engineer focused on data pipelines and scalable systems.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-100 mb-3">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="index.html" class="hover:text-emerald-400">Home</a></li>
+          <li><a href="projects.html" class="hover:text-emerald-400">Projects</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-100 mb-3">Connect</h3>
+        <ul class="space-y-2">
+          <li><a href="mailto:ravula1@asu.edu" class="hover:text-emerald-400">ravula1@asu.edu</a></li>
+          <li><a href="https://github.com/Rahul200512" target="_blank" class="hover:text-emerald-400">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-800 text-center py-6 text-sm text-slate-500">© 2025 Rahul Reddy Avula. All rights reserved.</div>
+  </footer>
+</body>
+</html>
